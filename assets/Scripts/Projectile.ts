@@ -3,6 +3,7 @@ import { eventTarget } from './Common';
 import { GAME_OVER, INIT_PROJECTILE, SHOOT, HIT_BUBBLE, PLAY_HIT_SOUND, PLAY_GAME_OVER_SOUND } from './CONSTANTS';
 import { Bubble } from './Bubble';
 import { Obstacle } from './Obstacle';
+import { BoxObstacle } from './BoxObstacle';
 const { ccclass, property } = _decorator;
 
 @ccclass('Projectile')
@@ -26,15 +27,14 @@ export class Projectile extends Component {
         }
 
         eventTarget.on(SHOOT, e => this.shootProjectile());
-        eventTarget.on(INIT_PROJECTILE, e => this.init(e));
+        eventTarget.on(INIT_PROJECTILE, e => this.init());
 
         this._rg = this.getComponent(RigidBody2D);
         this._avatar = this.getComponentInChildren(Sprite).node;
         this._duration = 10 / this.speedRotation;
     }
 
-    init(startPoint: Vec3) {
-        this.node.position = startPoint;
+    init() {
         this.node.angle = 0;
         this.startRotation();
     }
@@ -63,6 +63,14 @@ export class Projectile extends Component {
     }
 
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
+        const boxObstacle = selfCollider.getComponent(BoxObstacle);
+
+        if (boxObstacle) {
+            console.log('game over');
+            return;
+        }
+
+        return;
         this._rg.linearVelocity = Vec2.ZERO;
         const bubble = selfCollider.getComponent(Bubble);
         const obstacle = selfCollider.getComponent(Obstacle);
