@@ -481,8 +481,7 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "speedRotation": 2,
-    "speedShoot": 2,
+    "speedRotation": 1,
     "pivot": {
       "__type__": "cc.Vec3",
       "x": 0,

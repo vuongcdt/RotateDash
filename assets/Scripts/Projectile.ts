@@ -10,12 +10,11 @@ const { ccclass, property } = _decorator;
 export class Projectile extends Component {
     @property
     private speedRotation: number = 3;
+    @property(Vec3)
+    pivot: Vec3 = new Vec3(0, 0, 0); 
     @property
-    private speedShoot: number = 1;
-    @property(Canvas)
-    private canvas: Canvas;
+    radius: number = 200; 
 
-    private _avatar: Node;
     private _duration: number = 0;
     private _dirRotation: number = -1;
     private _rg: RigidBody2D;
@@ -30,36 +29,35 @@ export class Projectile extends Component {
         eventTarget.on(INIT_PROJECTILE, e => this.init());
 
         this._rg = this.getComponent(RigidBody2D);
-        this._avatar = this.getComponentInChildren(Sprite).node;
         this._duration = 10 / this.speedRotation;
     }
 
     init() {
         this.node.angle = 0;
-        this.startRotation();
+        this.startRotationNew();
     }
 
-    startRotation() {
+    startRotationNew() {
+        let angle = 0;
         tween(this.node)
-            .to(this.getDurationRotation(), { eulerAngles: v3(0, 0, 360 * this._dirRotation) })
-            .call(() => {
-                this.node.setRotationFromEuler(0, 0, 0);
-                this.startRotation();
-            })
+            .repeatForever(
+                tween()
+                    .call(() => {
+                        angle += this.speedRotation * this._dirRotation;
+                        if (angle >= 360) angle -= 360;
+                        const radian = angle * Math.PI / 180; 
+                        const x = this.pivot.x + this.radius * Math.cos(radian);
+                        const y = this.pivot.y + this.radius * Math.sin(radian);
+
+                        this.node.setPosition(x, y, this.node.position.z);
+                    })
+                    .delay(0) 
+            )
             .start();
     }
 
     shootProjectile() {
-        const posWorldAvatar = this._avatar.getWorldPosition();
-        const posNodedAvatar = this.canvas.getComponent(UITransform).convertToNodeSpaceAR(posWorldAvatar);
-
-        const target = posNodedAvatar
-            .subtract(this.node.position)
-            .normalize()
-            .multiplyScalar(20 * this.speedShoot);
-
-        Tween.stopAll();
-        this._rg.linearVelocity = new Vec2(target.x, target.y);
+        this._dirRotation *= -1;
     }
 
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
@@ -67,6 +65,8 @@ export class Projectile extends Component {
 
         if (boxObstacle) {
             console.log('game over');
+            // eventTarget.emit(GAME_OVER);
+            // eventTarget.emit(PLAY_GAME_OVER_SOUND);
             return;
         }
 
@@ -93,10 +93,9 @@ export class Projectile extends Component {
         const angle = this.getAngleFromVec3(localPoint);
 
         setTimeout(() => {
-            this.node.position = selfCollider.node.position;
-            this.node.angle = angle;
+            this.pivot = selfCollider.node.position;
             this._dirRotation = this._dirArr[randomRangeInt(0, 2)];
-            this.startRotation();
+            this.startRotationNew();
         }, 0);
     }
 
@@ -117,5 +116,7 @@ export class Projectile extends Component {
         return duration;
     }
 }
+
+
 
 
