@@ -1,9 +1,10 @@
 import { _decorator, Canvas, Collider2D, Component, Contact2DType, IPhysics2DContact, math, Node, PhysicsSystem2D, randomRangeInt, RigidBody2D, Sprite, Tween, tween, UITransform, v3, Vec2, Vec3 } from 'cc';
 import { eventTarget } from './Common';
-import { GAME_OVER, INIT_PROJECTILE, SHOOT, HIT_BUBBLE, PLAY_HIT_SOUND, PLAY_GAME_OVER_SOUND } from './CONSTANTS';
+import { GAME_OVER, INIT_PROJECTILE, SHOOT, HIT_BUBBLE, PLAY_HIT_SOUND, PLAY_GAME_OVER_SOUND, TRIGGLE_TARGET } from './CONSTANTS';
 import { Bubble } from './Bubble';
 import { Obstacle } from './Obstacle';
 import { BoxObstacle } from './BoxObstacle';
+import { Target } from './Target';
 const { ccclass, property } = _decorator;
 
 @ccclass('Projectile')
@@ -11,9 +12,9 @@ export class Projectile extends Component {
     @property
     private speedRotation: number = 3;
     @property(Vec3)
-    pivot: Vec3 = new Vec3(0, 0, 0); 
+    pivot: Vec3 = new Vec3(0, 0, 0);
     @property
-    radius: number = 200; 
+    radius: number = 200;
 
     private _duration: number = 0;
     private _dirRotation: number = -1;
@@ -45,13 +46,13 @@ export class Projectile extends Component {
                     .call(() => {
                         angle += this.speedRotation * this._dirRotation;
                         if (angle >= 360) angle -= 360;
-                        const radian = angle * Math.PI / 180; 
+                        const radian = angle * Math.PI / 180;
                         const x = this.pivot.x + this.radius * Math.cos(radian);
                         const y = this.pivot.y + this.radius * Math.sin(radian);
 
                         this.node.setPosition(x, y, this.node.position.z);
                     })
-                    .delay(0) 
+                    .delay(0)
             )
             .start();
     }
@@ -62,12 +63,17 @@ export class Projectile extends Component {
 
     onBeginContact(selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
         const boxObstacle = selfCollider.getComponent(BoxObstacle);
+        const target = selfCollider.getComponent(Target);
 
         if (boxObstacle) {
-            console.log('game over');
+            // console.log('game over');
             // eventTarget.emit(GAME_OVER);
             // eventTarget.emit(PLAY_GAME_OVER_SOUND);
             return;
+        }
+
+        if (target) {
+            eventTarget.emit(TRIGGLE_TARGET);
         }
 
         return;
