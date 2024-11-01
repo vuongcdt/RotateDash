@@ -5,11 +5,10 @@ const { ccclass, property } = _decorator;
 
 @ccclass('PlayerController')
 export class PlayerController extends Component {
-    private _isHasShoot: boolean = true;
+    private _isHasShoot: boolean = false;
 
     start() {
         input.on(Input.EventType.TOUCH_END, this.onTouchStart, this);
-        // input.on(Input.EventType.MOUSE_DOWN,this.onTouchStart, this);
         eventTarget.on(SET_HAS_SHOOT, e => this.setCanShoot());
     }
 
@@ -18,7 +17,6 @@ export class PlayerController extends Component {
             return;
         }
 
-        // this._isHasShoot = false;
         eventTarget.emit(SHOOT);
         eventTarget.emit(PLAY_SHOOT_SOUND);
     }

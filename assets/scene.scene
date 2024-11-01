@@ -769,7 +769,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 200,
-      "y": 100,
+      "y": -200,
       "z": 0
     },
     "_lrot": {
@@ -936,7 +936,7 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "speedRotation": 1,
+    "speedRotation": 0.5,
     "pivot": {
       "__type__": "cc.Vec3",
       "x": 0,

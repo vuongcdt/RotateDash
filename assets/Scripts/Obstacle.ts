@@ -1,4 +1,6 @@
-import { _decorator, Component, Node, randomRange, tween, Vec3 } from 'cc';
+import { _decorator, Component, Node, randomRange, tween} from 'cc';
+import { eventTarget } from './Common';
+import { MOVE_OBSTACLE } from './CONSTANTS';
 const { ccclass, property } = _decorator;
 
 @ccclass('Obstacle')
@@ -15,9 +17,9 @@ export class Obstacle extends Component {
     private _duration: number = 0;
 
     start() {
-        this.moveBox();
+        eventTarget.on(MOVE_OBSTACLE, e => this.moveBox());
     }
-    
+
     moveBox() {
         this.setDuration();
         tween(this.box)
@@ -25,13 +27,13 @@ export class Obstacle extends Component {
                 tween()
                     .to(this._duration, { position: this.endPoint.position })
                     .to(this._duration, { position: this.startPoint.position })
-                    .call(()=>this.setDuration())
+                    .call(() => this.setDuration())
             )
             .start();
     }
 
     setDuration() {
-        this._duration = randomRange(10, 15) / this.speed;
+        this._duration = randomRange(10, 12) / this.speed;
     }
 
 }

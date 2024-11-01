@@ -1,6 +1,6 @@
 import { _decorator, Button, Node } from 'cc';
 import { eventTarget } from '../Common';
-import { SET_HAS_SHOOT } from '../CONSTANTS';
+import { RESET_GAME} from '../CONSTANTS';
 import { ScreenBase } from './ScreenBase';
 const { ccclass, property } = _decorator;
 
@@ -16,9 +16,8 @@ export class HomeScreen extends ScreenBase {
 
     onPlayClicked(){
         this.node.active = false;
-        eventTarget.emit(SET_HAS_SHOOT);
+        eventTarget.emit(RESET_GAME);
     }
-
 }
 
 

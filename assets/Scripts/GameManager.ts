@@ -1,7 +1,6 @@
-import { _decorator, Component, Node, randomRangeInt } from 'cc';
-import { Bubble } from './Bubble';
+import { _decorator, Component, Node } from 'cc';
 import { eventTarget } from './Common';
-import { GAME_OVER, INIT_PROJECTILE, RESET_GAME, SET_HAS_SHOOT, SET_SCORE, HIT_BUBBLE, SHOW_GAME_OVER_SCREEN, TRIGGLE_TARGET } from './CONSTANTS';
+import { GAME_OVER, INIT_PROJECTILE, MOVE_OBSTACLE, RESET_GAME, SET_HAS_SHOOT, SET_SCORE, SHOW_GAME_OVER_SCREEN, TRIGGLE_TARGET } from './CONSTANTS';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameManager')
@@ -11,17 +10,15 @@ export class GameManager extends Component {
     @property(Node)
     private targeDown: Node;
 
-    private _isUp: boolean = false;
+    private _isUp: boolean = true;
     private _score: number = 0;
 
-
-
     start() {
-        eventTarget.on(TRIGGLE_TARGET, () => this.triggleTarget());
+        eventTarget.on(TRIGGLE_TARGET, e => this.triggleTarget());
         eventTarget.on(GAME_OVER, e => this.setGameOver());
         eventTarget.on(RESET_GAME, e => this.reset());
 
-        this.targeUp.active = false;
+        this.targeDown.active = false;
         this.reset();
     }
 
@@ -29,8 +26,11 @@ export class GameManager extends Component {
         this._score = 0;
         eventTarget.emit(SET_SCORE, this._score);
 
-        eventTarget.emit(INIT_PROJECTILE);
-        eventTarget.emit(SET_HAS_SHOOT);
+        setTimeout(() => {
+            eventTarget.emit(INIT_PROJECTILE);
+            eventTarget.emit(SET_HAS_SHOOT);
+            eventTarget.emit(MOVE_OBSTACLE);
+        }, 500);
     }
 
     triggleTarget() {
