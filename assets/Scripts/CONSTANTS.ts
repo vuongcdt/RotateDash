@@ -2,6 +2,7 @@
 export const SHOOT: string = 'SHOOT';
 export const SET_SCORE: string = 'SET_SCORE';
 export const SET_HAS_SHOOT: string = 'SET_HAS_SHOOT';
+export const SET_DIS_SHOOT: string = 'SET_DIS_SHOOT';
 
 export const GAME_OVER: string = 'GAME_OVER';
 export const RESET_GAME: string = 'RESET_GAME';

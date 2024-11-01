@@ -936,7 +936,7 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "speedRotation": 0.5,
+    "speedRotation": 1,
     "pivot": {
       "__type__": "cc.Vec3",
       "x": 0,

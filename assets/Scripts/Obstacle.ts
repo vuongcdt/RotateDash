@@ -21,12 +21,15 @@ export class Obstacle extends Component {
     }
 
     moveBox() {
+        const startPos = this.startPoint.position;
+        this.box.position = startPos;
         this.setDuration();
+        
         tween(this.box)
             .repeatForever(
                 tween()
                     .to(this._duration, { position: this.endPoint.position })
-                    .to(this._duration, { position: this.startPoint.position })
+                    .to(this._duration, { position: startPos })
                     .call(() => this.setDuration())
             )
             .start();

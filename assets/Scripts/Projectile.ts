@@ -1,6 +1,6 @@
 import { _decorator,  Collider2D, Component, Contact2DType, IPhysics2DContact, math,  PhysicsSystem2D, tween,  Vec3 } from 'cc';
 import { eventTarget } from './Common';
-import { INIT_PROJECTILE, SHOOT, TRIGGLE_TARGET } from './CONSTANTS';
+import { GAME_OVER, INIT_PROJECTILE, PLAY_GAME_OVER_SOUND, SHOOT, TRIGGLE_TARGET } from './CONSTANTS';
 import { BoxObstacle } from './BoxObstacle';
 import { Target } from './Target';
 const { ccclass, property } = _decorator;
@@ -8,13 +8,13 @@ const { ccclass, property } = _decorator;
 @ccclass('Projectile')
 export class Projectile extends Component {
     @property
-    private speedRotation: number = 3;
+    private speedRotation: number = 1;
     @property(Vec3)
     pivot: Vec3 = new Vec3(0, 0, 0);
     @property
     radius: number = 200;
 
-    private _angle: number = -45;
+    private _angle: number = -60;
     private _dirRotation: number = -1;
 
     onLoad() {
@@ -27,6 +27,7 @@ export class Projectile extends Component {
     }
 
     init() {
+        this._angle = -60;
         this.startRotation();
     }
 
@@ -57,9 +58,8 @@ export class Projectile extends Component {
         const target = selfCollider.getComponent(Target);
 
         if (boxObstacle) {
-            // console.log('game over');
-            // eventTarget.emit(GAME_OVER);
-            // eventTarget.emit(PLAY_GAME_OVER_SOUND);
+            eventTarget.emit(GAME_OVER);
+            eventTarget.emit(PLAY_GAME_OVER_SOUND);
             return;
         }
 
