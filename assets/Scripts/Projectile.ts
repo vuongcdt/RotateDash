@@ -1,6 +1,6 @@
 import { _decorator,  Collider2D, Component, Contact2DType, IPhysics2DContact, math,  PhysicsSystem2D, tween,  Vec3 } from 'cc';
 import { eventTarget } from './Common';
-import { GAME_OVER, INIT_PROJECTILE, PLAY_GAME_OVER_SOUND, SHOOT, TRIGGLE_TARGET } from './CONSTANTS';
+import { GAME_OVER, INIT_PROJECTILE, PLAY_GAME_OVER_SOUND, TOUCH, TRIGGLE_TARGET } from './CONSTANTS';
 import { BoxObstacle } from './BoxObstacle';
 import { Target } from './Target';
 const { ccclass, property } = _decorator;
@@ -22,7 +22,7 @@ export class Projectile extends Component {
             PhysicsSystem2D.instance.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
         }
 
-        eventTarget.on(SHOOT, e => this.shootProjectile());
+        eventTarget.on(TOUCH, e => this.changeDirProjectile());
         eventTarget.on(INIT_PROJECTILE, e => this.init());
     }
 
@@ -49,7 +49,7 @@ export class Projectile extends Component {
             .start();
     }
 
-    shootProjectile() {
+    changeDirProjectile() {
         this._dirRotation *= -1;
     }
 

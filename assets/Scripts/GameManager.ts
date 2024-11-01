@@ -1,6 +1,6 @@
 import { _decorator, Component, Node, Tween } from 'cc';
 import { eventTarget } from './Common';
-import { GAME_OVER, INIT_PROJECTILE, MOVE_OBSTACLE, RESET_GAME, SET_DIS_SHOOT, SET_HAS_SHOOT, SET_SCORE, SHOW_GAME_OVER_SCREEN, TRIGGLE_TARGET } from './CONSTANTS';
+import { GAME_OVER, INIT_PROJECTILE, MOVE_OBSTACLE, RESET_GAME, SET_DIS_TOUCH, SET_HAS_TOUCH, SET_SCORE, SHOW_GAME_OVER_SCREEN, TRIGGLE_TARGET } from './CONSTANTS';
 const { ccclass, property } = _decorator;
 
 @ccclass('GameManager')
@@ -24,7 +24,7 @@ export class GameManager extends Component {
     reset() {
         this._score = 0;
         eventTarget.emit(SET_SCORE, this._score);
-        eventTarget.emit(SET_HAS_SHOOT);
+        eventTarget.emit(SET_HAS_TOUCH);
 
         setTimeout(() => {
             eventTarget.emit(INIT_PROJECTILE);
@@ -48,7 +48,8 @@ export class GameManager extends Component {
 
     setGameOver() {
         Tween.stopAll();
-        eventTarget.emit(SET_DIS_SHOOT);
+        eventTarget.emit(SET_DIS_TOUCH);
+        
         setTimeout(() => {
             eventTarget.emit(SHOW_GAME_OVER_SCREEN, this._score);
         }, 500);
